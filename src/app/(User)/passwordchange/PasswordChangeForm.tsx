@@ -46,7 +46,7 @@ const PasswordChangeForm = ({token}: Props) => {
                 description: "Password changed successfuly",
             })
             console.log(response.data)
-            // router.push('/signin')
+            router.push('/signin')
            } catch (error) {
             console.log(error)
             toast({

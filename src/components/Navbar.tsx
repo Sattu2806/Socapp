@@ -12,11 +12,14 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
 import Link from 'next/link'
+import { useSession, signOut } from 'next-auth/react'
 
 type Props = {}
 
 const Navbar = (props: Props) => {
     const { setTheme } = useTheme()
+    const {data: Session, status} = useSession()
+    console.log(Session)
   return (
     <div className='max-w-[1280px] mx-auto'>
         <div className='flex items-center py-4 gap-10 justify-between'>
@@ -29,9 +32,21 @@ const Navbar = (props: Props) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem>
-                        <Link href='/signup'>SignUp</Link>
-                    </DropdownMenuItem>
+                    {status === 'unauthenticated' && (
+                        <DropdownMenuItem>
+                            <Link href='/signin'>SignIn</Link>
+                        </DropdownMenuItem>
+                    )}
+                    {status === 'authenticated' &&(
+                        <>
+                        <DropdownMenuItem>
+                            <p>{Session.user?.name}</p>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <p className='text-red-500' onClick={() => signOut()}>SignOut</p>
+                        </DropdownMenuItem>
+                        </>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
             <DropdownMenu>
