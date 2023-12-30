@@ -50,6 +50,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   ActivateToken   ActivateToken[]
+  Post          Post[]
+
 }
 
 model VerificationToken {
@@ -69,4 +71,39 @@ model ActivateToken {
   updatedAt     DateTime @updatedAt
   userId    String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum TypePost {
+  IMAGE
+  VIDEO
+  POST
+}
+
+model Post {
+  id      String  @id @default(dbgenerated("concat('post_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  content  String?
+  type    String
+  tags    String[]
+  authorId    String
+  author      User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Image         Image[]
+  Video         Video[]
+}
+
+model Image {
+  id      String  @id @default(dbgenerated("concat('image_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  url     String
+  description String?
+  postId      String
+  Post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Video {
+  id      String  @id @default(dbgenerated("concat('video_', replace(cast(gen_random_uuid() as text), '-', ''))")) @db.Text
+  url     String
+  description String?
+  postId      String
+  Post        Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }

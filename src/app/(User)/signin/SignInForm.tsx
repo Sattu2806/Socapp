@@ -34,7 +34,7 @@ const SignInForm = (props: Props) => {
           email: "",
           password:""
         },
-      })
+    })
      
     async function onSubmit(values: z.infer<typeof SignInSchema>) {
 
@@ -98,8 +98,7 @@ const SignInForm = (props: Props) => {
 
                 <Button onClick={() => signIn('google')} type='button' className='text-red-500 w-full' variant='outline'>Sign In with Google</Button>
 
-                <Button type="submit">Submit</Button>
-
+                <Button className='w-full' type="submit">Submit</Button>
                 </form>
             </Form>
         </Card>
