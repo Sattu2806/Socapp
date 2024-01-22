@@ -19,7 +19,6 @@ type Props = {}
 const Navbar = (props: Props) => {
     const { setTheme } = useTheme()
     const {data: Session, status} = useSession()
-    console.log(Session)
   return (
     <div className='max-w-[1280px] mx-auto'>
         <div className='flex items-center py-4 gap-10 justify-between'>

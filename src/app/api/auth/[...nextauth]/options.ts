@@ -8,17 +8,32 @@ import axios from "axios";
 
 
 export const options:NextAuthOptions = {
+    session:{
+        strategy:"jwt",
+    },
     adapter: PrismaAdapter(prisma),
     providers:[
         GoogleProvider({
-            clientId:process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret:process.env.GOOGLE_CLIENT_SECRET as string,
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            profile(profile){
+                return({
+                    id:profile.sub,
+                    name:`${profile.given_name}${profile.family_name}`,
+                    email:profile.name,
+                    image:profile.picture,
+                    active:profile.active? profile.active: true,
+                })
+            }
         }),
         CredentialProvider({
             name:"credentials",
             credentials:{
-                email: {},
-                password: {},
+                email: {
+                    label: "Email",
+                    type: "email",
+                },
+                password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
                 if (!credentials?.email || !credentials?.password) {
@@ -36,16 +51,15 @@ export const options:NextAuthOptions = {
                 if (!user) {
                   return null;
                 }
-                
               
                 const passwordMatch = await bcrypt.compare(credentials.password, user.password!);
                 
-                if(!passwordMatch || !user.verified_user){
+                if(!passwordMatch){
                     return null
                 }
 
                 return user
-            },
+            }
               
         })
     ],
@@ -71,9 +85,6 @@ export const options:NextAuthOptions = {
                     }
                 }
         },
-    },
-    session:{
-        strategy:"jwt",
     },
     secret:process.env.NEXTAUTH_SECRET,
     debug:process.env.NODE_ENV === "development"

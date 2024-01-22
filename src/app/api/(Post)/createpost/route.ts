@@ -37,13 +37,14 @@ export async function POST(request: NextRequest){
                     content,
                     authorId:User.id,
                     tags,
-                    type:TypePost.POST,
+                    type:typePost as TypePost,
                     Image:{
                         createMany:{
                             data: files && files
                             .filter((file:{filetype:string}) => file.filetype.startsWith("image"))
-                            .map((file:{url:string, filetype:string}) => ({
-                                url:file.url
+                            .map((file:{url:string, filetype:string, description:string}) => ({
+                                url:file.url,
+                                description:file.description
                             }))
                         }
                     },
@@ -51,8 +52,9 @@ export async function POST(request: NextRequest){
                         createMany:{
                             data: files && files
                             .filter((file:{filetype:string}) => file.filetype.startsWith("video"))
-                            .map((file:{url:string, filetype:string}) => ({
-                                url:file.url
+                            .map((file:{url:string, filetype:string, description:string}) => ({
+                                url:file.url,
+                                description:file.description
                             }))
                         }
                     },
